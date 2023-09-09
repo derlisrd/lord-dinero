@@ -34,8 +34,7 @@ class AuthController extends Controller
                 $token = $user->createToken('auth_token')->plainTextToken;
 
                 return response()->json([
-                    'response'=>true,
-                    'error'=>false,
+                    'success'=>true,
                     'message'=>'Logget in',
                     'results'=>[
                         'username'=>$user->username,
@@ -50,10 +49,9 @@ class AuthController extends Controller
 
 
         return response()->json([
-            'response'=>false,
-            'error'=>true,
+            'success'=>true,
             'Message'=>'Credentials are not valid'
-        ]);
+        ],401);
 
     }
 
