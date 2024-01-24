@@ -23,9 +23,5 @@ class DatabaseSeeder extends Seeder
             'name'=>'Derlis',
             'active'=>1
         ]);
-        DB::table('clientes')->insert([
-            'doc'=>'x',
-            'nombre'=>'Sin nombre'
-        ]);
     }
 }
