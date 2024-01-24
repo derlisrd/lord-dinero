@@ -5,16 +5,26 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+
+
+
     public function login(Request $r){
 
-        $r->validate([
-            'email' => ['required'],
-            'password' => ['required'],
+        $validator = Validator::make($r->all(), [
+            'email'=>'required',
+            'password'=>'required'
         ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ],425);
+        }
 
         $email = $r->email;
         $password = $r->password;
@@ -25,9 +35,6 @@ class AuthController extends Controller
         ['username' => $email, 'password' => $password, 'active' => 1];
 
         if (Auth::attempt($intento,$remember)) {
-            /* $r->session()->regenerate();
-            return redirect()->route('home'); */
-
             $user = User::where('email',$email)->orWhere('username',$email)->firstOrFail();
 
             if($user){
@@ -35,7 +42,6 @@ class AuthController extends Controller
 
                 return response()->json([
                     'success'=>true,
-                    'message'=>'Logget in',
                     'results'=>[
                         'username'=>$user->username,
                         'email'=>$user->email,
@@ -54,6 +60,10 @@ class AuthController extends Controller
         ],401);
 
     }
+
+
+
+
 
 
     public function check(){
@@ -78,6 +88,10 @@ class AuthController extends Controller
         }
 
     }
+
+
+
+
 
     public function logout(Request $request){
         $request->user()->currentAccessToken()->delete();
