@@ -9,7 +9,12 @@ Route::middleware(['auth:sanctum'])->group(function(){
 
 });
 
-
+Route::get('/',function(){
+    return response()->json([
+        "success"=>false
+    ],401);
+});
 
 
 Route::post('/auth/login',[AuthController::class,'login']);
+Route::post('/auth/register',[AuthController::class,'register']);

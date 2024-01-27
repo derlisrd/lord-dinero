@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -74,18 +75,19 @@ class AuthController extends Controller
                     'email'=>auth('sanctum')->user()->email,
                     'id'=>auth('sanctum')->user()->id
                 ],
-                'response'=>true,
-                'error'=>false,
-                'message'=>'Valid',
+                'success'=>true
             ]);
         }else{
             return response()->json([
-                'results'=>null,
-                'response'=>false,
-                'error'=>false,
+                'success'=>false,
                 'message'=>'Token invalid',
-            ]);
+            ],401);
         }
+
+        return response()->json([
+            'success'=>false,
+            'message'=>"Server error"
+        ],500);
 
     }
 
@@ -95,6 +97,48 @@ class AuthController extends Controller
 
     public function logout(Request $request){
         $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'success'=>true,
+            'message'=>"Token deleted"
+        ]);
+    }
+
+
+    public function register(Request $r){
+        $validator = Validator::make($r->all(), [
+            'email'=>['required', 'email'],
+            'name'=>['required'],
+            'password'=>['required', 'string', 'min:6', 'confirmed']
+        ]);
+
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ],423);
+        }
+        $email = User::where('email',$r->email)->first();
+
+        if($email){
+            return response()->json([
+                'success'=>false,
+                'message'=>'E-mail has be taken.'
+            ],403);
+        }
+        $pass = Hash::make($r->password);
+        User::create([
+            'username'=>$r->email,
+            'name'=>$r->name,
+            'email'=>$r->email,
+            'password'=>$pass
+        ]);
+
+        return response()->json([
+            'success'=>true,
+            'message'=>'User has created.'
+        ],201);
+
+
     }
 
 }
