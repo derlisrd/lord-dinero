@@ -82,18 +82,11 @@ class AuthController extends Controller
                 ],
                 'success'=>true
             ]);
-        }else{
-            return response()->json([
-                'success'=>false,
-                'message'=>'Token invalid',
-            ],401);
         }
-
         return response()->json([
             'success'=>false,
-            'message'=>"Server error"
-        ],500);
-
+            'message'=>'Token invalid',
+        ],401);
     }
 
 
@@ -147,15 +140,52 @@ class AuthController extends Controller
             'success'=>true,
             'message'=>'User has created.'
         ],201);
-
-
     }
 
 
+
     public function reset(Request $r){
+
+        $validator = Validator::make($r->all(), [
+            'email'=>['required', 'email','exists:users,email'],
+            'token'=>['required'],
+            'password' => 'required|string|min:6|confirmed',
+            'password_confirmation' => 'required'
+        ]);
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ],423);
+        }
+
+        $email = $r->email;
+        $token = $r->token;
+        $registro = PasswordReset::where('email',$email)->where('token',$token)->first();
+        if(!$registro){
+            return response()->json([
+                'success'=>false,
+                'message'=>'Invalid code',
+                'registro'=>$registro
+            ],404);
+        }
+        $ahora = Carbon::now();
+        $fechaValidacion = Carbon::parse($registro->created_at);
+        $minutosTranscurridos = $fechaValidacion->diffInMinutes($ahora);
+        if ($minutosTranscurridos >= 15) {
+            return response()->json([
+                'success'=>false,
+                'message'=>'Expired code'
+            ],401);
+        }
+        $user = User::where('email',$email)->first();
+
+        $user->password = Hash::make($r->password);
+        $user->save();
+
         return response()->json([
             'success'=>true,
-            'message'=>'Enviado'
+            'message'=>'The password has been changed successfully'
         ]);
     }
 
@@ -164,10 +194,59 @@ class AuthController extends Controller
 
 
 
+
+
+
+
+
+    public function code(Request $r){
+        $validator = Validator::make($r->all(), [
+            'email'=>['required', 'email','exists:users,email'],
+            'code'=>['required']
+        ]);
+        if($validator->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()
+            ],423);
+        }
+
+        $email = $r->email;
+        $code = $r->code;
+
+
+        $registro = PasswordReset::where('email',$email)->where('code',$code)->first();
+        if(!$registro){
+            return response()->json([
+                'success'=>false,
+                'message'=>'Invalid code'
+            ],404);
+        }
+        $ahora = Carbon::now();
+        $fechaValidacion = Carbon::parse($registro->created_at);
+        $minutosTranscurridos = $fechaValidacion->diffInMinutes($ahora);
+        if ($minutosTranscurridos >= 15) {
+            return response()->json([
+                'success'=>false,
+                'message'=>'Expired code'
+            ],401);
+        }
+        return response()->json([
+            'success'=>true,
+            'results'=>[
+                'token'=>$registro->token
+            ]
+        ]);
+
+    }
+
+
+
+
     public function forgot(Request $r){
 
         $validator = Validator::make($r->all(), [
-            'email'=>['required', 'email']
+            'email'=>['required', 'email','exists:users,email'],
         ]);
 
         if($validator->fails()){
@@ -177,31 +256,26 @@ class AuthController extends Controller
             ],423);
         }
         $email = $r->email;
-        $existEmail = User::where('email',$email)->first();
-
-        if(!$existEmail){
-            return response()->json([
-                'success'=>false,
-                'message'=>'E-mail no exist'
-            ],404);
-        }
 
         $randomNumber = random_int(100000, 999999);
         try {
-            /* Mail::send('email.forgot', ['code'=>$randomNumber], function ($message) use($email) {
+            Mail::send('email.forgot', ['code'=>$randomNumber], function ($message) use($email) {
                 $message->subject('Recovery password');
                 $message->to($email);
-            }); */
-            $token = Str::random(40);
+            });
+            $token = Str::random(64);
             $datetime = Carbon::now()->format('Y-m-d H:i:s');
             PasswordReset::updateOrCreate(
                 ['email'=>$email],
                 [
                     'email'=>$email,
-                    'token'=>$token,
+                    'token'=>($token),
+                    'code'=>$randomNumber,
+                    'validated'=>false,
                     'created_at'=>$datetime
                 ]
             );
+
 
             return response()->json([
                 'success'=>true,
