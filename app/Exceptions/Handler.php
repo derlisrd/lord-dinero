@@ -33,15 +33,11 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-    $this->renderable(function (AuthenticationException $e, $request) {
-
+        $this->renderable(function (AuthenticationException $e, $request) {
             return response()->json([
-            'response'=>false,
-            'error'=>true,
-            'message' => 'Unauthenticated.',
-            'results'=>null
-            ]);
-
-    });
+                'success'=>false,
+                'message' => 'Unauthenticated.'
+            ],401);
+        });
     }
 }

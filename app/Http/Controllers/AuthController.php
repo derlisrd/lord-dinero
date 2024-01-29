@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
+use Carbon\Carbon;
+
 class AuthController extends Controller
 {
 
@@ -149,6 +152,14 @@ class AuthController extends Controller
     }
 
 
+    public function reset(Request $r){
+        return response()->json([
+            'success'=>true,
+            'message'=>'Enviado'
+        ]);
+    }
+
+
 
 
 
@@ -177,13 +188,24 @@ class AuthController extends Controller
 
         $randomNumber = random_int(100000, 999999);
         try {
-            Mail::send('email.forgot', ['code'=>$randomNumber], function ($message) use($email) {
+            /* Mail::send('email.forgot', ['code'=>$randomNumber], function ($message) use($email) {
                 $message->subject('Recovery password');
                 $message->to($email);
-            });
+            }); */
+            $token = Str::random(40);
+            $datetime = Carbon::now()->format('Y-m-d H:i:s');
+            PasswordReset::updateOrCreate(
+                ['email'=>$email],
+                [
+                    'email'=>$email,
+                    'token'=>$token,
+                    'created_at'=>$datetime
+                ]
+            );
+
             return response()->json([
                 'success'=>true,
-                'message'=>'E-mail enviado'
+                'message'=>'Please check your mail.'
             ]);
         } catch (\Throwable $th) {
             Log::debug($th);
