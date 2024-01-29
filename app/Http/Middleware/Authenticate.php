@@ -12,14 +12,22 @@ class Authenticate extends Middleware
      * @param  \Illuminate\Http\Request  $request
      * @return string|null
      */
+    protected function render($request)
+    {
+        if (! $request->expectsJson()) {
+            return response()->json([
+                'success'=>false,
+                'message'=>'No autenticated'
+            ]);
+            //return route('login');
+        }
+    }
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
             return response()->json([
-                'response'=>false,
-                'error'=>true,
-                'message'=>'No autenticated',
-                'results'=>null
+                'success'=>false,
+                'message'=>'No autenticated'
             ]);
             //return route('login');
         }

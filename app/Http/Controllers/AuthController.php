@@ -72,21 +72,11 @@ class AuthController extends Controller
 
 
 
-    public function check(){
-        if(auth('sanctum')->check()){
-            return response()->json([
-                'results'=>[
-                    'username'=>auth('sanctum')->user()->username,
-                    'email'=>auth('sanctum')->user()->email,
-                    'id'=>auth('sanctum')->user()->id
-                ],
-                'success'=>true
-            ]);
-        }
+    public function check(Request $r){
         return response()->json([
-            'success'=>false,
-            'message'=>'Token invalid',
-        ],401);
+            'success'=>true,
+            'results'=>$r->user()
+        ]);
     }
 
 
@@ -95,8 +85,8 @@ class AuthController extends Controller
 
 
 
-    public function logout(Request $request){
-        $request->user()->currentAccessToken()->delete();
+    public function logout(Request $r){
+        $r->user()->currentAccessToken()->delete();
         return response()->json([
             'success'=>true,
             'message'=>"Token deleted"
@@ -144,6 +134,8 @@ class AuthController extends Controller
 
 
 
+
+
     public function reset(Request $r){
 
         $validator = Validator::make($r->all(), [
@@ -159,9 +151,7 @@ class AuthController extends Controller
             ],423);
         }
 
-        $email = $r->email;
-        $token = $r->token;
-        $registro = PasswordReset::where('email',$email)->where('token',$token)->first();
+        $registro = PasswordReset::where('email',$r->email)->where('token',$r->token)->first();
         if(!$registro){
             return response()->json([
                 'success'=>false,
@@ -178,8 +168,7 @@ class AuthController extends Controller
                 'message'=>'Expired code'
             ],401);
         }
-        $user = User::where('email',$email)->first();
-
+        $user = User::where('email',$registro->email)->first();
         $user->password = Hash::make($r->password);
         $user->save();
 
@@ -211,11 +200,8 @@ class AuthController extends Controller
             ],423);
         }
 
-        $email = $r->email;
-        $code = $r->code;
 
-
-        $registro = PasswordReset::where('email',$email)->where('code',$code)->first();
+        $registro = PasswordReset::where('email',$r->email)->where('code',$r->code)->first();
         if(!$registro){
             return response()->json([
                 'success'=>false,
@@ -233,9 +219,7 @@ class AuthController extends Controller
         }
         return response()->json([
             'success'=>true,
-            'results'=>[
-                'token'=>$registro->token
-            ]
+            'results'=>['token'=>$registro->token]
         ]);
 
     }
@@ -269,14 +253,11 @@ class AuthController extends Controller
                 ['email'=>$email],
                 [
                     'email'=>$email,
-                    'token'=>($token),
+                    'token'=>$token,
                     'code'=>$randomNumber,
-                    'validated'=>false,
                     'created_at'=>$datetime
                 ]
             );
-
-
             return response()->json([
                 'success'=>true,
                 'message'=>'Please check your mail.'
@@ -288,7 +269,6 @@ class AuthController extends Controller
                 'message'=>'E-mail no enviado. Error de servidor.'
             ],500);
         }
-
     }
 
 }
