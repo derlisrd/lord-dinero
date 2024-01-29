@@ -96,6 +96,13 @@ class AuthController extends Controller
 
 
 
+    /*
+    |--------------------------------------------------------------------------
+    | Register
+    |--------------------------------------------------------------------------
+    */
+
+
 
     public function register(Request $r){
         $validator = Validator::make($r->all(), [
@@ -133,7 +140,11 @@ class AuthController extends Controller
     }
 
 
-
+    /*
+    |--------------------------------------------------------------------------
+    | Reset password
+    |--------------------------------------------------------------------------
+    */
 
 
     public function reset(Request $r){
@@ -171,6 +182,11 @@ class AuthController extends Controller
         $user = User::where('email',$registro->email)->first();
         $user->password = Hash::make($r->password);
         $user->save();
+        $email = $r->email;
+        Mail::send('email.password_reset', ['code'=>''], function ($message) use($email) {
+            $message->subject('Password changed');
+            $message->to($email);
+        });
 
         return response()->json([
             'success'=>true,
@@ -183,10 +199,11 @@ class AuthController extends Controller
 
 
 
-
-
-
-
+    /*
+    |--------------------------------------------------------------------------
+    | Validate code to refresh password
+    |--------------------------------------------------------------------------
+    */
 
     public function code(Request $r){
         $validator = Validator::make($r->all(), [
@@ -225,7 +242,11 @@ class AuthController extends Controller
     }
 
 
-
+    /*
+    |--------------------------------------------------------------------------
+    | Forgot password
+    |--------------------------------------------------------------------------
+    */
 
     public function forgot(Request $r){
 
