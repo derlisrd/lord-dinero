@@ -16,6 +16,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return response()->json([
         'success'=>false,
-        'message'=>'Not found'
+        'message'=>'Not found web'
     ],404);
 });
