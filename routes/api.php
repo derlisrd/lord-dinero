@@ -11,16 +11,12 @@ Route::middleware(['auth:sanctum'])->group(function(){
 });
 
 
+Route::post('/auth/login',[AuthController::class,'login']);
+Route::post('/auth/register',[AuthController::class,'register']);
+Route::post('/auth/forgot',[AuthController::class,'forgot']);
+Route::post('/auth/code',[AuthController::class,'code']);
+Route::post('/auth/reset',[AuthController::class,'reset']);
 
-
-
-Route::group(['prefix'=>'auth'], function(){
-    Route::post('/login',[AuthController::class,'login']);
-    Route::post('/register',[AuthController::class,'register']);
-    Route::post('/forgot',[AuthController::class,'forgot']);
-    Route::post('/code',[AuthController::class,'code']);
-    Route::post('/reset',[AuthController::class,'reset']);
-});
 
 Route::fallback(function () {
     return response()->json(["success"=>false,'message'=>'Not found'],404);

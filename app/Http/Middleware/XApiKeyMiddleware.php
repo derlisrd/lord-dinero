@@ -21,7 +21,9 @@ class XApiKeyMiddleware
         if ( !$key || $key !== env('X_API_KEY')) {
             return response()->json([
                 'success'=>false,
-                'message'=>'There is not x-api-key'
+                'message'=>'There is not x-api-key',
+                'env'=>env('X_API_KEY'),
+                'key'=>$key,
             ],401);
         }
 
