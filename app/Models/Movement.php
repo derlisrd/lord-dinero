@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Movement extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'value','user_id','category_id','description'
+    ];
 }
