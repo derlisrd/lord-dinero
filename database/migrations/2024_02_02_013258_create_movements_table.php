@@ -21,6 +21,7 @@ class CreateMovementsTable extends Migration
             $table->float('value',20,2);
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_id')->references('id')->on('categories');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

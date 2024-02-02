@@ -17,7 +17,7 @@ class MovementsController extends Controller
      */
     public function index(Request $r) : JsonResponse
     {
-       
+
        $primerDia = Carbon::now()->firstOfMonth()->format('Y-m-d');
        $hoy = Carbon::now()->format('Y-m-d');
        $desde = ($r->desde ? $r->desde : $primerDia) . ' 00:00:00';
@@ -86,9 +86,35 @@ class MovementsController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $r, $id)
     {
-        //
+        $valida = Validator::make($r->all(), [
+            'value'=>['required','numeric'],
+            'category_id'=>'required',
+            'description'=>'required'
+        ]);
+
+        if($valida->fails()){
+            return response()->json([
+                'success' => false,
+                'message' => $valida->errors()
+            ],425);
+        }
+
+        $mov = Movement::find($id);
+        $mov->update([
+            'value'=>$r->value,
+            'category_id'=>$r->category_id,
+            'description'=>$r->description
+        ]);
+
+        return response()->json([
+            'success'=>true,
+            'message'=>'Updated!',
+            'results'=>$mov
+        ]);
+
+
     }
 
     /**
@@ -99,6 +125,12 @@ class MovementsController extends Controller
      */
     public function destroy($id)
     {
-        
+        $mov = Movement::find($id);
+        $mov->destroy();
+        return response()->json([
+            'success'=>true,
+            'message'=>'Deleted!',
+            'results'=>$mov
+        ]);
     }
 }

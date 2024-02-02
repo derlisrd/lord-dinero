@@ -2,11 +2,27 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CategoriesController;
+use App\Http\Controllers\MovementsController;
 
 Route::middleware(['auth:sanctum'])->group(function(){
 
     Route::post('/auth/check',[AuthController::class,'check']);
     Route::post('/auth/logout',[AuthController::class,'logout']);
+
+
+    Route::prefix('category')->group(function () {
+        Route::get('/',[CategoriesController::class,'index']);
+        Route::post('/',[CategoriesController::class,'store']);
+        Route::put('/{id}',[CategoriesController::class,'update']);
+        Route::delete('/{id}',[CategoriesController::class,'update']);
+    });
+    Route::prefix('movements')->group(function () {
+        Route::get('/',[MovementsController::class,'index']);
+        Route::post('/',[MovementsController::class,'store']);
+        Route::put('/{id}',[MovementsController::class,'update']);
+        Route::delete('/{id}',[MovementsController::class,'update']);
+    });
 
 });
 

@@ -12,4 +12,7 @@ class Movement extends Model
     protected $fillable = [
         'value','user_id','category_id','description'
     ];
+    protected $hidden = [
+        'deleted_at','updated_at'
+    ];
 }

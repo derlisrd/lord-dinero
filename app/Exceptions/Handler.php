@@ -41,10 +41,10 @@ class Handler extends ExceptionHandler
             return response()->json(['success'=>false,'message' => 'Method Not Allowed'], 405);
         }
 
-        if ($exception instanceof AuthorizationException || !Auth::check()) {
+         if ($exception instanceof AuthorizationException || !Auth::check()) {
             return response()->json([
                 'success'=>false,
-                'message' => 'Not authenticated'
+                'message' => 'Unauthenticated.'
             ],401);
         }
 
