@@ -35,5 +35,5 @@ Route::post('/auth/reset',[AuthController::class,'reset']);
 
 
 Route::fallback(function () {
-    return response()->json(["success"=>false,'message'=>'Not found fall'],404);
+    return response()->json(["success"=>false,'message'=>'Not found route'],404);
 });
