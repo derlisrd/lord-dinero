@@ -43,7 +43,8 @@ class MovementsController extends Controller
         $valida = Validator::make($r->all(), [
             'value'=>['required','numeric'],
             'category_id'=>'required',
-            'description'=>'required'
+            'description'=>'required',
+            'tipo'=>['required','numeric']
         ]);
 
         if($valida->fails()){
@@ -57,6 +58,7 @@ class MovementsController extends Controller
             'value'=>$r->value,
             'category_id'=>$r->category_id,
             'description'=>$r->description,
+            'tipo'=>$r->tipo,
             'user_id'=>$user->id
         ]);
 
@@ -91,7 +93,8 @@ class MovementsController extends Controller
         $valida = Validator::make($r->all(), [
             'value'=>['required','numeric'],
             'category_id'=>'required',
-            'description'=>'required'
+            'description'=>'required',
+            'tipo'=>['required','numeric']
         ]);
 
         if($valida->fails()){
@@ -105,7 +108,8 @@ class MovementsController extends Controller
         $mov->update([
             'value'=>$r->value,
             'category_id'=>$r->category_id,
-            'description'=>$r->description
+            'description'=>$r->description,
+            'tipo'=>$r->tipo
         ]);
 
         return response()->json([

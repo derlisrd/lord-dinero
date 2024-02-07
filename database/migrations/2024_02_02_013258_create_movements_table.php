@@ -17,6 +17,7 @@ class CreateMovementsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('category_id');
+            $table->boolean('tipo')->default(1);
             $table->string('description')->nullable();
             $table->float('value',20,2);
             $table->foreign('user_id')->references('id')->on('users');

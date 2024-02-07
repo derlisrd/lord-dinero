@@ -10,7 +10,7 @@ class Movement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'value','user_id','category_id','description'
+        'value','user_id','category_id','description','tipo'
     ];
     protected $hidden = [
         'deleted_at','updated_at'
