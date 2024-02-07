@@ -110,6 +110,12 @@ class MovementsController extends Controller
                 'message' => $valida->errors()
             ],425);
         }
+        if( ! Category::find($r->category_id) ){
+            return response()->json([
+                'success'=>false,
+                'message'=>'Categoria no existe'
+            ],404);
+        }
 
         $mov = Movement::find($id);
         $mov->update([
