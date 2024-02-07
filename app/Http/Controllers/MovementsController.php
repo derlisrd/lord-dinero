@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Movement;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
@@ -52,6 +53,12 @@ class MovementsController extends Controller
                 'success' => false,
                 'message' => $valida->errors()
             ],425);
+        }
+        if( ! Category::find($r->category_id) ){
+            return response()->json([
+                'success'=>false,
+                'message'=>'Categoria no existe'
+            ],404);
         }
         $user = $r->user();
         $mov = Movement::create([
