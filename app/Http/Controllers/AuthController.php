@@ -79,7 +79,7 @@ class AuthController extends Controller
             'results'=>[
                 'username'=>$user->username,
                 'email'=>$user->email,
-                'token'=>$user->currentAccessToken(),
+                'token'=>auth()::user()->currentAccessToken(),
                 'id'=>$user->id
             ]
         ]);
