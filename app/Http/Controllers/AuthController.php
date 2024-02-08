@@ -69,21 +69,29 @@ class AuthController extends Controller
 
 
 
-
+        /*
+    |--------------------------------------------------------------------------
+    | CHECK VALID TOKEN
+    |--------------------------------------------------------------------------
+    */
 
 
     public function check(Request $r){
-        $user = $r->user();
+        $user = $r->user(); 
+        $token = explode(' ', $r->header('Authorization'));
         return response()->json([
-            'success'=>true,
+            'success'=>Auth::check(),
             'results'=>[
                 'username'=>$user->username,
                 'email'=>$user->email,
-                'token'=>$r->user()->currentAccessToken(),
+                'token'=> $token[1],
                 'id'=>$user->id
             ]
         ]);
     }
+
+
+
 
 
 
