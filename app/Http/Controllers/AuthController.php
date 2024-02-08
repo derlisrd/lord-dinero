@@ -73,10 +73,15 @@ class AuthController extends Controller
 
 
     public function check(Request $r){
-
+        $user = $r->user();
         return response()->json([
             'success'=>true,
-            'results'=>$r->user()
+            'results'=>[
+                'username'=>$user->username,
+                'email'=>$user->email,
+                'token'=>$user->accessToken,
+                'id'=>$user->id
+            ]
         ]);
     }
 
