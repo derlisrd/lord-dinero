@@ -266,6 +266,9 @@ class AuthController extends Controller
 
         $validator = Validator::make($r->all(), [
             'email'=>['required', 'email','exists:users,email'],
+        ],[
+            'email.email'=>'Email invalid',
+            'email.exists'=>'E-mail not found'
         ]);
 
         if($validator->fails()){

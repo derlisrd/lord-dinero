@@ -15,4 +15,8 @@ class Movement extends Model
     protected $hidden = [
         'deleted_at','updated_at'
     ];
+
+    public function category(){
+        return $this->belongsTo(Category::class,'category_id');
+    }
 }

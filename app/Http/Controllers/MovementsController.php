@@ -25,10 +25,10 @@ class MovementsController extends Controller
        $hasta = ($r->hasta ? $r->hasta : $hoy) . ' 23:59:59';
 
        $user = $r->user();
-       $result = Movement::where('user_id',$user->id)->whereBetween('created_at', [$desde, $hasta])->get();
+       $result = Movement::where('user_id',$user->id)->whereBetween('created_at', [$desde, $hasta]);
        return response()->json([
         'success'=>true,
-        'results'=>$result
+        'results'=>$result->get()
        ]);
 
     }
@@ -84,8 +84,14 @@ class MovementsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show($id)
-    {
-        //
+    {   
+        $mov = Movement::find($id);
+        $mov->category;
+        return response()->json([
+            'success'=>true,
+            
+            'results'=>$mov
+        ]);
     }
 
     /**
