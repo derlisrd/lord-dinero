@@ -15,6 +15,6 @@ jobs:
 
       - name: Sync with Ubuntu
         run: |
-          ssh derlis@154.38.186.191 "cd /home/sites/onegaleon && git pull origin main"
+          ssh ${{ secrets.USERNAME }}@${{secrets.IP_HOST}} "cd /home/sites/onegaleon && git pull origin main"
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
