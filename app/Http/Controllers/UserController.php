@@ -8,5 +8,9 @@ class UserController extends Controller
 {
     public function update(Request $request){
 
+        return response()->json([
+            'success'=>true,
+            'message'=>'Updated'
+        ]);
     }
 }
