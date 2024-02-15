@@ -10,6 +10,9 @@ Route::middleware(['auth:sanctum'])->group(function(){
     Route::post('/auth/check',[AuthController::class,'check']);
     Route::post('/auth/logout',[AuthController::class,'logout']);
 
+    Route::prefix('category')->group(function () {
+
+    });
 
     Route::prefix('category')->group(function () {
         Route::get('/',[CategoriesController::class,'index']);
