@@ -6,7 +6,6 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
 
@@ -43,10 +42,9 @@ class Handler extends ExceptionHandler
         }
 
          if ($exception instanceof AuthorizationException || !Auth::check()) {
-
             return response()->json([
                 'success'=>false,
-                'message' => 'Unauthorized'
+                'message' => 'Unauthenticated.'
             ],401);
         }
 
@@ -58,7 +56,7 @@ class Handler extends ExceptionHandler
         $this->renderable(function (AuthenticationException $e, $request) {
             return response()->json([
                 'success'=>false,
-                'message' => 'Unauthenticated token'
+                'message' => 'Unauthenticated.'
             ],401);
         });
     }
