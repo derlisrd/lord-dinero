@@ -44,7 +44,7 @@ class Handler extends ExceptionHandler
          if ($exception instanceof AuthorizationException || !Auth::check()) {
             return response()->json([
                 'success'=>false,
-                'message' => 'Unauthenticated.'
+                'message' => 'Unauthenticated check'
             ],401);
         }
 
@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
         $this->renderable(function (AuthenticationException $e, $request) {
             return response()->json([
                 'success'=>false,
-                'message' => 'Unauthenticated.'
+                'message' => 'Unauthenticated token'
             ],401);
         });
     }
