@@ -9,7 +9,7 @@ class UserController extends Controller
 {
     public function update(Request $request){
        $validate =  Validator::make($request->all(),[
-
+            'email'=>['email']
        ]);
 
         return response()->json([
