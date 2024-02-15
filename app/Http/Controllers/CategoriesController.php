@@ -3,17 +3,50 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Movement;
+use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class CategoriesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
+    
+    public function movementsByCategory(Request $r) : JsonResponse {
+
+        try {
+        
+        $primerDia = Carbon::now()->firstOfMonth()->format('Y-m-d');
+        $hoy = Carbon::now()->format('Y-m-d');
+        $desde = ($r->desde ? $r->desde : $primerDia) . ' 00:00:00';
+        $hasta = ($r->hasta ? $r->hasta : $hoy) . ' 23:59:59';
+
+        $user = $r->user();
+            $results = Movement::where('category_id',$r->id)
+            ->join('categories as c','category_id','=','c.id')
+            ->select('movements.id','c.description as category','value','tipo','movements.description','category_id','movements.created_at')
+            ->where('movements.user_id',$user->id)
+            ->whereBetween('movements.created_at', [$desde, $hasta])->get();
+
+        return response()->json(
+            [
+                'success'=>true,
+                'results'=>$results
+            ]
+        );
+        } catch (\Throwable $th) {
+            Log::error($th);
+            return response()->json(
+                [
+                    'success'=>false,
+                    'message'=>'Servidor error'
+                ],500
+            );
+        }
+    }
+
+    public function index() : JsonResponse
     {
         $cat = Category::all();
         return response()->json([

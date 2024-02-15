@@ -16,6 +16,7 @@ Route::middleware(['auth:sanctum'])->group(function(){
         Route::post('/',[CategoriesController::class,'store']);
         Route::put('/{id}',[CategoriesController::class,'update']);
         Route::delete('/{id}',[CategoriesController::class,'update']);
+        Route::get('/{id}/movements',[CategoriesController::class,'movementsByCategory']);
     });
     Route::prefix('movements')->group(function () {
         Route::get('/{id}',[MovementsController::class,'show']);
