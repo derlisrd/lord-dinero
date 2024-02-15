@@ -5,6 +5,20 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\MovementsController;
 
+Route::get('/',function(){
+    return response()->json([
+        'success'=>false,
+        'message'=>'Not found'
+    ],404);
+});
+
+Route::post('/auth/login',[AuthController::class,'login']);
+Route::post('/auth/register',[AuthController::class,'register']);
+Route::post('/auth/forgot',[AuthController::class,'forgot']);
+Route::post('/auth/code',[AuthController::class,'code']);
+Route::post('/auth/reset',[AuthController::class,'reset']);
+
+
 Route::middleware(['auth:sanctum'])->group(function(){
 
     Route::post('/auth/check',[AuthController::class,'check']);
@@ -28,11 +42,7 @@ Route::middleware(['auth:sanctum'])->group(function(){
 });
 
 
-Route::post('/auth/login',[AuthController::class,'login']);
-Route::post('/auth/register',[AuthController::class,'register']);
-Route::post('/auth/forgot',[AuthController::class,'forgot']);
-Route::post('/auth/code',[AuthController::class,'code']);
-Route::post('/auth/reset',[AuthController::class,'reset']);
+
 
 
 Route::fallback(function () {
