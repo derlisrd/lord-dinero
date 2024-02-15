@@ -19,7 +19,7 @@ Route::post('/auth/code',[AuthController::class,'code']);
 Route::post('/auth/reset',[AuthController::class,'reset']);
 
 
-/* Route::middleware(['auth:sanctum'])->group(function(){
+Route::middleware(['auth:sanctum'])->group(function(){
 
     Route::post('/auth/check',[AuthController::class,'check']);
     Route::post('/auth/logout',[AuthController::class,'logout']);
@@ -39,7 +39,7 @@ Route::post('/auth/reset',[AuthController::class,'reset']);
         Route::delete('/{id}',[MovementsController::class,'update']);
     });
 
-}); */
+});
 
 
 
