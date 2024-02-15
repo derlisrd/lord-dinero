@@ -6,6 +6,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Throwable;
 
@@ -41,12 +42,13 @@ class Handler extends ExceptionHandler
             return response()->json(['success'=>false,'message' => 'Method Not Allowed'], 405);
         }
 
-         /* if ($exception instanceof AuthorizationException || !Auth::check()) {
+         if ($exception instanceof AuthorizationException || !Auth::check()) {
+
             return response()->json([
                 'success'=>false,
                 'message' => 'Unauthorized'
             ],401);
-        } */
+        }
 
     }
 
