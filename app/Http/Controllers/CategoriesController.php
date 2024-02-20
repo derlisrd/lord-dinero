@@ -70,7 +70,7 @@ class CategoriesController extends Controller
         if($valida->fails()){
             return response()->json([
                 'success' => false,
-                'message' => $valida->errors()
+                'message' => $valida->errors()->first()
             ],425);
         }
         $user = $r->user();
@@ -114,7 +114,7 @@ class CategoriesController extends Controller
         if($valida->fails()){
             return response()->json([
                 'success' => false,
-                'message' => $valida->errors()
+                'message' => $valida->errors()->first()
             ],425);
         }
 

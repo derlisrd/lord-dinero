@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CategoriesController;
 use App\Http\Controllers\MovementsController;
+use App\Http\Controllers\UserController;
 
 Route::get('/',function(){
     return response()->json([
@@ -37,6 +38,11 @@ Route::middleware(['auth:sanctum'])->group(function(){
         Route::post('/',[MovementsController::class,'store']);
         Route::put('/{id}',[MovementsController::class,'update']);
         Route::delete('/{id}',[MovementsController::class,'update']);
+    });
+
+    Route::prefix('user')->group(function(){
+        Route::get('/',[UserController::class,'me']);
+        Route::delete('/',[UserController::class,'destroy']);
     });
 
 });

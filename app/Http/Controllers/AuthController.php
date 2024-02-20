@@ -28,7 +28,7 @@ class AuthController extends Controller
         if($validator->fails()){
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()
+                'message' => $validator->errors()->first()
             ],425);
         }
 
@@ -128,7 +128,7 @@ class AuthController extends Controller
         if($validator->fails()){
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()
+                'message' => $validator->errors()->first()
             ],423);
         }
         $email = User::where('email',$r->email)->first();
@@ -172,7 +172,7 @@ class AuthController extends Controller
         if($validator->fails()){
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()
+                'message' => $validator->errors()->first()
             ],423);
         }
 
@@ -227,7 +227,7 @@ class AuthController extends Controller
         if($validator->fails()){
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()
+                'message' => $validator->errors()->first()
             ],423);
         }
 
@@ -274,7 +274,7 @@ class AuthController extends Controller
         if($validator->fails()){
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()
+                'message' => $validator->errors()->first()
             ],423);
         }
         $email = $r->email;

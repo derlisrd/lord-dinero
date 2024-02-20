@@ -51,7 +51,7 @@ class MovementsController extends Controller
         if($valida->fails()){
             return response()->json([
                 'success' => false,
-                'message' => $valida->errors()
+                'message' => $valida->errors()->first() 
             ],425);
         }
         if( ! Category::find($r->category_id) ){
@@ -113,7 +113,7 @@ class MovementsController extends Controller
         if($valida->fails()){
             return response()->json([
                 'success' => false,
-                'message' => $valida->errors()
+                'message' => $valida->errors()->first()
             ],425);
         }
         if( ! Category::find($r->category_id) ){
